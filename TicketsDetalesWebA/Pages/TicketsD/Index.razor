@@ -1,5 +1,128 @@
-﻿<h3>Index</h3>
+﻿@page "/IndexTickets"
 
-@code {
+@using TicketsDetalesWebA.Models
 
+@inject HttpClient httpClient
+
+<div class="container">
+    <div class="card">
+        @*Header de la Consulta*@
+        <div class="card-header">
+            <head>
+                <h1>Consulta de Tickets</h1>
+            </head>
+        </div>
+
+        <div class="card-body">
+            <body>
+                @*Boton Agregar nuevo Ticket*@
+                <a href="/CreateTickets"><button type="button" class="btn btn-outline-primary"> Agregar Ticket</button></a>
+
+                <div class="row">
+                    @*Campo Fecha Desde*@
+                    <div class ="col">
+                        <label>Desde</label>
+                        <InputDate @bind-Value="Desde" class ="form-control"></InputDate>
+                    </div>
+                    @*Campo Fecha Hasta*@
+                    <div class="col">
+                        <label>Hasta</label>
+                        <InputDate @bind-Value = "Hasta"class = "form-control"></InputDate>
+                    </div>
+                </div>
+                    
+                <div class = "row">
+                    @*Campo para buscar por Id*@
+                    <div class="col">
+                        <label>Buscar por Id</label>
+                        <div class="input-group">
+                            <InputNumber class="form-control" @bind-Value="ticketId" aria-placeholder="BusquedaId"> </InputNumber>
+                            <button type="button" class="btn btn-outline-primary" @onclick="Buscar"> <i class="oi oi-reload"> Buscar</i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <table class="table">
+                    @*Cabecera de la tabla cliente*@
+                    <thead class="table-primary">
+                        <tr bgcolor="skyblue">
+                            <th> Id Ticket</th>
+                            <th>Fecha</th>
+                            <th>Solicitado por</th>
+                            <th>Descripci&oacute;n</th>
+                            <th>Asunto</th>
+                            <th> </th>
+                        </tr>
+                    </thead>
+
+                    <tbody class="table-sm">
+
+                        @if (tickets.Count == 0)
+                        {
+                            @: No existe registros
+                        }
+                        else
+                        {
+
+                            @*Cuerpo de la tabla*@
+                            @foreach (var Tickets in tickets)
+                            {
+                                <tr>
+                                    <td>@Tickets.TicketId</td>
+                                    <td>@Tickets.Fecha</td>
+                                    <td>@Tickets.SolicitadoPor</td>
+                                    <td>@Tickets.Descripcion</td>
+                                    <td>@Tickets.Asunto</td>
+                                    <td>
+                                        <a href="/Edi_Ticket/@Tickets.TicketId"><i class="bi bi-pencil-square" /></a>
+                                        <a href="/Detalles_Ticket/@Tickets.TicketId"><i class="bi bi-eye-fill" /></a>
+                                        <a href="/Eliminar_Ticket/@Tickets.TicketId" class="link-danger"><i class="bi bi-trash" /></a>
+                                    </td>
+                                </tr>
+
+                            }
+                        }
+                    </tbody>
+                </table>
+
+            </body>
+        </div>
+
+    </div>
+</div>
+
+@code
+{
+    public List<Tickets> tickets {get; set;} = new List<Tickets>();
+    public int Conteo {get; set;}
+
+    public DateTime Desde {get; set;}
+
+    public DateTime Hasta {get; set;}
+
+    public int ticketId {get; set;}
+
+    protected override async Task OnInitializedAsync()
+    {
+        Desde = DateTime.Now.AddMonths(-1);
+        Hasta = DateTime.Now;
+    }
+
+    public async Task Buscar()
+    {
+        tickets = await httpClient.GetFromJsonAsync<List<Tickets>>($"api/Tickets");
+
+        if (ticketId > 0)
+        {
+            tickets = tickets.Where(t => t.TicketId == ticketId).ToList();
+        }
+
+        if (Desde != default && Hasta != default)
+        {
+            tickets = tickets.Where(t => t.Fecha >= Desde.Date && t.Fecha <= Hasta).ToList();
+        }
+
+        Conteo = tickets != null ? tickets.Count : 0;
+        StateHasChanged();
+    }
 }

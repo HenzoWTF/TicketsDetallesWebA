@@ -23,16 +23,16 @@ namespace TicketsDetalesWebA.Api.Controllers
 
         // GET: api/Tickets
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Tickets>>> GetTickets()
+        public async Task<ActionResult<IEnumerable<Tickets>>> Gettickets()
         {
-            return await _context.Tickets.ToListAsync();
+            return await _context.tickets.ToListAsync();
         }
 
         // GET: api/Tickets/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Tickets>> GetTickets(int id)
         {
-            var tickets = await _context.Tickets.FindAsync(id);
+            var tickets = await _context.tickets.FindAsync(id);
 
             if (tickets == null)
             {
@@ -78,7 +78,8 @@ namespace TicketsDetalesWebA.Api.Controllers
         [HttpPost]
         public async Task<ActionResult<Tickets>> PostTickets(Tickets tickets)
         {
-            _context.Tickets.Add(tickets);
+            Console.Write("Entro");
+            _context.tickets.Add(tickets);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetTickets", new { id = tickets.TicketId }, tickets);
@@ -88,13 +89,13 @@ namespace TicketsDetalesWebA.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTickets(int id)
         {
-            var tickets = await _context.Tickets.FindAsync(id);
+            var tickets = await _context.tickets.FindAsync(id);
             if (tickets == null)
             {
                 return NotFound();
             }
 
-            _context.Tickets.Remove(tickets);
+            _context.tickets.Remove(tickets);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -102,7 +103,7 @@ namespace TicketsDetalesWebA.Api.Controllers
 
         private bool TicketsExists(int id)
         {
-            return _context.Tickets.Any(e => e.TicketId == id);
+            return _context.tickets.Any(e => e.TicketId == id);
         }
     }
 }

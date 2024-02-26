@@ -11,7 +11,7 @@ using TicketsDetalesWebA.Api.DAL;
 namespace TicketsDetalesWebA.Api.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20240226022144_Inicial")]
+    [Migration("20240226153530_Inicial")]
     partial class Inicial
     {
         /// <inheritdoc />
@@ -28,12 +28,10 @@ namespace TicketsDetalesWebA.Api.Migrations
 
                     b.Property<string>("Asunto")
                         .IsRequired()
-                        .HasMaxLength(75)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Descripcion")
                         .IsRequired()
-                        .HasMaxLength(75)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("Fecha")
@@ -41,12 +39,11 @@ namespace TicketsDetalesWebA.Api.Migrations
 
                     b.Property<string>("SolicitadoPor")
                         .IsRequired()
-                        .HasMaxLength(35)
                         .HasColumnType("TEXT");
 
                     b.HasKey("TicketId");
 
-                    b.ToTable("Tickets");
+                    b.ToTable("tickets");
                 });
 
             modelBuilder.Entity("TicketsDetalesWebA.Models.TicketsDetalles", b =>
@@ -57,12 +54,10 @@ namespace TicketsDetalesWebA.Api.Migrations
 
                     b.Property<string>("Emisor")
                         .IsRequired()
-                        .HasMaxLength(35)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Mensaje")
                         .IsRequired()
-                        .HasMaxLength(75)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("TicketId")

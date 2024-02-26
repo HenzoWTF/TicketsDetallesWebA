@@ -25,12 +25,10 @@ namespace TicketsDetalesWebA.Api.Migrations
 
                     b.Property<string>("Asunto")
                         .IsRequired()
-                        .HasMaxLength(75)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Descripcion")
                         .IsRequired()
-                        .HasMaxLength(75)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("Fecha")
@@ -38,12 +36,11 @@ namespace TicketsDetalesWebA.Api.Migrations
 
                     b.Property<string>("SolicitadoPor")
                         .IsRequired()
-                        .HasMaxLength(35)
                         .HasColumnType("TEXT");
 
                     b.HasKey("TicketId");
 
-                    b.ToTable("Tickets");
+                    b.ToTable("tickets");
                 });
 
             modelBuilder.Entity("TicketsDetalesWebA.Models.TicketsDetalles", b =>
@@ -54,12 +51,10 @@ namespace TicketsDetalesWebA.Api.Migrations
 
                     b.Property<string>("Emisor")
                         .IsRequired()
-                        .HasMaxLength(35)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Mensaje")
                         .IsRequired()
-                        .HasMaxLength(75)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("TicketId")

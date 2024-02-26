@@ -1,5 +1,193 @@
-﻿<h3>Index</h3>
+﻿@page "/CreateTickets"
+@inject HttpClient httpClient
+@inject NavigationManager navigationManager
+
+<PageTitle>Crear Nuevo Ticket</PageTitle>
+<EditForm Model="ticket" OnValidSubmit="Guardar">
+	<DataAnnotationsValidator />
+	<div class="container">
+		<div class="card shadow-lg">
+			@*Header*@
+			<div class="card-header">
+				<h3><strong>Crear Nuevo Ticket</strong></h3>
+			</div>
+			@*Cuerpo*@
+			<div class="card-body">
+				<div class="mb-3">
+					<div class="col-4">
+						@*Ticket ID*@
+						<label class="form-label" for="ticketId"><strong>TicketId:</strong></label>
+						<InputNumber id="ticketId" class="form-control" @bind-Value="ticket.TicketId"></InputNumber>
+					</div>
+				</div>
+				<div class="mb-3"> 
+					<div class="col-4">
+						@*Fecha*@
+						<label class="form-label" for="fecha"><strong>Fecha:</strong></label>
+						<InputDate id="fecha" class="form-control" @bind-Value="ticket.Fecha"></InputDate>
+						<ValidationMessage For="@(() => ticket.Fecha)"></ValidationMessage>
+					</div>
+				</div>
+				<div class="mb-3">
+					<div class="col-4">
+						@*Asunto*@
+						<label class="form-label" for="asunto"><strong>Asunto:</strong></label>
+						<InputText id="asunto" class="form-control" @bind-Value="ticket.Asunto" placeholder="Ingrese un asunto"></InputText>
+						<ValidationMessage For="@(() => ticket.Asunto)"></ValidationMessage>
+					</div>
+				</div>
+				<div class="mb-3">
+					<div class="col-4">
+						@*Solicitado Por*@
+						<label class="form-label" for="solicitado"><strong>SolicitadoPor:</strong></label>
+						<InputText id="solicitado" class="form-control" @bind-Value="ticket.SolicitadoPor" placeholder="Ingrese el nombre de quien solicita el ticket"></InputText>
+						<ValidationMessage For="@(() => ticket.SolicitadoPor)"></ValidationMessage>
+					</div>
+				</div>
+				<div class="mb-3">
+					<div class="col-4">
+						@*Descripción*@
+						<label class="form-label" for="descripcion"><strong>Descripci&oacute;n:</strong></label>
+						<InputTextArea id="descripcion" class="form-control" @bind-Value="ticket.Descripcion" placeholder="Ingrese una descripción"></InputTextArea>
+						<ValidationMessage For="@(() => ticket.Descripcion)"></ValidationMessage>
+					</div>
+				</div>
+				<div class="mb-3"></div>
+			</div>
+
+
+			@*DETALLE Ticket*@
+			<fieldset class="border-success border border-1">
+				<h3>Mensajes</h3>
+				<div>
+
+					@*Nombre*@
+					<div class="col-5">
+						<label><span class="oi oi-person"></span> Nombre:</label>
+						<InputText class="form-control" @bind-Value="Nombre"></InputText>
+					</div>
+
+					@*Mensaje*@
+					<div class="row">
+						<div class="col-5">
+							<label><span class="oi oi-envelope-closed"></span> Mensaje</label>
+							<InputTextArea class="form-control" @bind-Value="MensajeTicket"></InputTextArea>
+						</div>
+
+						@*Boton Agregar*@
+						<div class="col-5">
+							<br>
+							<button type="button" class="btn btn-primary input-group-text" @onclick="AgregarDetalle">
+								<span class="oi oi-plus">Agregar</span>
+							</button>
+						</div>
+
+					</div>
+					@*Verificar si la Validacion del detalle hay texto, si es asi, hay un error*@
+					@if (ValidacionD.Length > 0)
+					{
+						<label class="text-danger">@ValidacionD</label>
+					}
+				</div>
+
+				@*Tabla de detalles*@
+				<hr />
+				<table class="table table-bordered table-light m-1">
+					<thead class="thead">
+						<tr class="table">
+							<th>Nombre</th>
+							<th>Mensaje</th>
+						</tr>
+					</thead>
+
+					<tbody>
+						@foreach (var detalle in ticket.TicketsDetalle)
+						{
+							<tr>
+								<td>@detalle.Emisor</td>
+								<td>@detalle.Mensaje</td>
+								@* <td> <button class="btn btn-outline-primary" @onclick="@(() => RemoverDetalle(detalle))"><i class="oi oi-trash" />Remover</button></td>
+							 *@</tr>
+						}
+					</tbody>
+				</table>
+
+				@*Conteo de la cantidad de mensajes*@
+				<div class="row justify-content-between">
+					<div class="col-4">
+						<label>Cantidad de Mensajes</label>
+						<div class="input-group mb-3">
+							<span class="form-control">@ticket.TicketsDetalle.Count()</span>
+						</div>
+					</div>
+				</div>
+				<hr />
+			</fieldset>
+			@*Conjunto de botones*@
+
+			@*Footer*@
+			<div class="card-footer d-flex justify-content-center">
+				<div class="px-2">
+					<a href="IndexTickets" class="btn btn-outline-primary"><i class="bi bi-box-arrow-left" /> Volver</a>
+				</div>
+				<button type="submit" class="btn btn-outline-success"><i class="bi bi-floppy-fill" /> Crear</button>
+			</div>
+		</div>
+	</div>
+	@*Mensaje*@
+	@mensaje
+</EditForm>
 
 @code {
+	public Tickets ticket { get; set; } = new Tickets();
+	public TicketsDetalles ticketsDetalle { get; set; } = new TicketsDetalles();
+	public string mensaje { get; set; } = string.Empty;
+
+	public string Nombre { get; set; } = string.Empty;
+
+	public string MensajeTicket { get; set; } = string.Empty;
+
+	public string ValidacionD { get; set; } = string.Empty;
+
+	public async Task Guardar()
+	{
+		//var response = await httpClient.PostAsJsonAsync($"api/tickets",ticket);
+		var response = await httpClient.PostAsJsonAsync("api/tickets", ticket);
+		if (response.IsSuccessStatusCode)
+		{
+			mensaje = "Se guardo";
+			navigationManager.NavigateTo("IndexTickets");
+		}
+		else
+		{
+			mensaje = "No se guardo";
+		}
+	}
+
+	public void Nuevo()
+	{
+		ticket = new Tickets();
+		mensaje = string.Empty;
+	}
+
+
+
+	public void AgregarDetalle()
+	{
+		// if (!ValidarDetalle())
+		// {
+		// 	return;
+		// }
+
+		ticket.TicketsDetalle.Add(new TicketsDetalles()
+			{
+				Emisor = Nombre,
+				Mensaje = MensajeTicket
+			});
+
+		Nombre = string.Empty;
+		MensajeTicket = string.Empty;
+		StateHasChanged();
+	}
 
 }

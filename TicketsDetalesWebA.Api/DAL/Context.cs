@@ -9,7 +9,7 @@ namespace TicketsDetalesWebA.Api.DAL
         {
 
         }
-        public DbSet<Tickets> Tickets { get; set; }
+        public DbSet<Tickets> tickets { get; set; }
 
     }
 }
