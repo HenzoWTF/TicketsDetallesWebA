@@ -106,8 +106,8 @@
 							<tr>
 								<td>@detalle.Emisor</td>
 								<td>@detalle.Mensaje</td>
-								@* <td> <button class="btn btn-outline-primary" @onclick="@(() => RemoverDetalle(detalle))"><i class="oi oi-trash" />Remover</button></td>
-							 *@</tr>
+								<td> <button class="btn btn-outline-primary" @onclick="@(() => RemoverDetalle(detalle))"><i class="bi bi-trash" />Remover</button></td>
+							 </tr>
 						}
 					</tbody>
 				</table>
@@ -188,6 +188,14 @@
 		Nombre = string.Empty;
 		MensajeTicket = string.Empty;
 		StateHasChanged();
+	}
+
+	public void RemoverDetalle(TicketsDetalles detalleRemover)
+	{
+		Nombre = detalleRemover.Emisor;
+		MensajeTicket = detalleRemover.Mensaje;
+
+		ticket.TicketsDetalle.Remove(detalleRemover);
 	}
 
 }

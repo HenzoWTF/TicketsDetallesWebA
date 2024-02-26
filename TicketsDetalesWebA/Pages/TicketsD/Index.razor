@@ -52,6 +52,7 @@
                             <th>Descripci&oacute;n</th>
                             <th>Asunto</th>
                             <th> </th>
+                            <th> </th>
                         </tr>
                     </thead>
 
@@ -76,7 +77,7 @@
                                     <td>
                                         <a href="/Edi_Ticket/@Tickets.TicketId"><i class="bi bi-pencil-square" /></a>
                                         <a href="/Detalles_Ticket/@Tickets.TicketId"><i class="bi bi-eye-fill" /></a>
-                                        <a href="/Eliminar_Ticket/@Tickets.TicketId" class="link-danger"><i class="bi bi-trash" /></a>
+                                        <a href="/DeleteTickets/Id=@Tickets.TicketId" class="link-danger"><i class="bi bi-trash" /></a>
                                     </td>
                                 </tr>
 
@@ -106,6 +107,11 @@
     {
         Desde = DateTime.Now.AddMonths(-1);
         Hasta = DateTime.Now;
+
+        tickets = await httpClient.GetFromJsonAsync<List<Tickets>>("api/Tickets");
+
+        if (tickets.Count == 0)
+            StateHasChanged();
     }
 
     public async Task Buscar()
