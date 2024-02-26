@@ -63,14 +63,14 @@
 
 					@*Nombre*@
 					<div class="col-5">
-						<label><span class="oi oi-person"></span> Nombre:</label>
+						<label><i class="bi bi-person-fill"></i> Nombre:</label>
 						<InputText class="form-control" @bind-Value="Nombre"></InputText>
 					</div>
 
 					@*Mensaje*@
 					<div class="row">
 						<div class="col-5">
-							<label><span class="oi oi-envelope-closed"></span> Mensaje</label>
+							<label><i class="bi bi-envelope"></i> Mensaje</label>
 							<InputTextArea class="form-control" @bind-Value="MensajeTicket"></InputTextArea>
 						</div>
 
@@ -78,7 +78,7 @@
 						<div class="col-5">
 							<br>
 							<button type="button" class="btn btn-primary input-group-text" @onclick="AgregarDetalle">
-								<span class="oi oi-plus">Agregar</span>
+								<i class="bi bi-file-earmark-plus">Agregar</i>
 							</button>
 						</div>
 
@@ -130,7 +130,7 @@
 				<div class="px-2">
 					<a href="IndexTickets" class="btn btn-outline-primary"><i class="bi bi-box-arrow-left" /> Volver</a>
 				</div>
-				<button type="submit" class="btn btn-outline-success"><i class="bi bi-floppy-fill" /> Crear</button>
+				<button type="submit" class="btn btn-outline-success"><i class="bi bi-floppy-fill" /> Guardar</button>
 			</div>
 		</div>
 	</div>
@@ -151,7 +151,6 @@
 
 	public async Task Guardar()
 	{
-		//var response = await httpClient.PostAsJsonAsync($"api/tickets",ticket);
 		var response = await httpClient.PostAsJsonAsync("api/tickets", ticket);
 		if (response.IsSuccessStatusCode)
 		{
@@ -174,11 +173,6 @@
 
 	public void AgregarDetalle()
 	{
-		// if (!ValidarDetalle())
-		// {
-		// 	return;
-		// }
-
 		ticket.TicketsDetalle.Add(new TicketsDetalles()
 			{
 				Emisor = Nombre,

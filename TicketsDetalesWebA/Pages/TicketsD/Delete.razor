@@ -1,4 +1,4 @@
-﻿@page "/DeleteTickets/Id={ticketId:int}"
+﻿@page "/DeleteTickets/{Id:int}"
 
 @inject HttpClient httpClient
 @inject NavigationManager navigationManager
@@ -30,35 +30,37 @@
 			<div class="mb-1">
 				<p class="mb-0">Asunto: @ticket.Asunto</p>
 			</div>
+
 		</div>
+
 		<div class="card-footer d-flex justify-content-center">
 			<div class="px-2">
 				<a href="IndexTickets" class="btn btn-outline-primary"><i class="bi bi-box-arrow-left" /> Volver</a>
 			</div>
 			<button type="button" class="btn btn-outline-danger" @onclick="Eliminar"><i class="bi bi-trash3-fill" /> Eliminar</button>
 		</div>
+
 	</div>
 </div>
 @mensaje
 
 @code {
 	[Parameter]
-	public int ticketId { get; set; }
+	public int Id { get; set; }
 	public Tickets ticket { get; set; } = new Tickets();
 	public string mensaje { get; set; } = string.Empty;
 
 	protected override async Task OnInitializedAsync()
 	{
-		await Task.Delay(500);
-		if (ticketId > 0)
+		if (Id > 0)
 		{
-			ticket = await httpClient.GetFromJsonAsync<Tickets>($"api/Tickets/{ticketId}");
+			ticket = await httpClient.GetFromJsonAsync<Tickets>($"api/Tickets/{Id}");
 		}
 	}
 
 	public async Task Eliminar()
 	{
-		var response = await httpClient.DeleteAsync($"api/Tickets/{ticketId}");
+		var response = await httpClient.DeleteAsync($"api/Tickets/{Id}");
 
 		if (response.IsSuccessStatusCode)
 		{
